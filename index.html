@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>QR Marker AR</title>
+
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
+    <style>
+      body { margin: 0; overflow: hidden; }
+    </style>
+  </head>
+
+  <body>
+    <a-scene
+      vr-mode-ui="enabled: false"
+      embedded
+      renderer="logarithmicDepthBuffer: true;"
+      arjs="trackingMethod: nft; sourceType: webcam; debugUIEnabled: false;"
+    >
+
+      <a-nft
+        type="nft"
+        url="./qr"   <!-- LET OP: géén extensie! -->
+        smooth="true"
+        smoothCount="5"
+        smoothTolerance="0.01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          gltf-model="url(RuweDoos.glb)"
+          scale="0.05 0.05 0.05"
+          position="0 0 0"
+          rotation="0 0 0"
+        ></a-entity>
+      </a-nft>
+
+      <a-entity camera></a-entity>
+
+    </a-scene>
+  </body>
+</html>
