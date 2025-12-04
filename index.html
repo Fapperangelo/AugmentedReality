@@ -43,9 +43,7 @@
     <a-scene
         embedded
         vr-mode-ui="enabled: false"
-        <!-- REMOVED 'cameraParametersUrl: camera_para.dat;' to simplify initialization -->
         arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30;"
-        <!-- REMOVED background color - screen will be black if camera fails -->
     >
 
       <!-- 
@@ -63,8 +61,8 @@
         <a-entity
           gltf-model="#ruwe-doos-model" 
           scale="1 1 1" 
-          rotation="0 0 0"
-          position="0 0.75 0" 
+          rotation="-90 0 0" <!-- NEW: Rotated -90 degrees on the X-axis to stand it upright -->
+          position="0 0 0" <!-- Resetting position; we might need to adjust this after rotation test -->
           model-loaded 
         >
         </a-entity>
