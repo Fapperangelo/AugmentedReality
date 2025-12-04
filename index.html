@@ -1,31 +1,61 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Wiebel-AR Ruwe Doos</title>
+    <title>Markerless AR Ruwe Doos</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    
+    <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-haptics-component@^1.0.0/dist/aframe-haptics-component.min.js"></script>
   </head>
   
-  <body style='margin : 0px; overflow: hidden;'>
-    
-    <a-scene
-        embedded
-        vr-mode-ui="enabled: false"
-        arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30;"
+  <body>
+    <a-scene 
+      webxr="optionalFeatures: hit-test, local-floor;"
+      ar-mode-ui="enabled: true"
     >
 
-      <a-marker preset='hiro'>
-        
-        <a-entity
-          gltf-model="url(RuweDoos.glb)"
-          scale="1 1 1"  rotation="0 0 0"
-          position="0 0 0"
-        ></a-entity>
-        
-      </a-marker>
+      <a-entity camera look-controls></a-entity>
 
-      <a-entity camera></a-entity>
-      
+      <a-ring
+        color="teal"
+        radius="0.1"
+        position="0 0 -3"
+        material="shader: flat"
+        look-at="[camera]"
+        cursor="rayOrigin: mouse"
+        raycaster="objects: [cursor]; far: 30; interval: 50"
+        visible="false"
+      ></a-ring>
+
+      <a-entity
+        id="model-container"
+        gltf-model="url(RuweDoos.glb)"
+        scale="0 0 0"  ></a-entity>
+
+      <script>
+        const scene = document.querySelector('a-scene');
+        const reticle = document.querySelector('a-ring');
+        const modelContainer = document.querySelector('#model-container');
+
+        // Dit gebeurt zodra de telefoon een oppervlak detecteert
+        scene.addEventListener('ar-hit-test-result', (event) => {
+          if (event.detail.results.length > 0) {
+            reticle.setAttribute('visible', true);
+            const hit = event.detail.results[0];
+            reticle.setAttribute('position', hit.position);
+          }
+        });
+
+        // Dit gebeurt als de gebruiker op het scherm tikt
+        scene.addEventListener('click', () => {
+          if (reticle.getAttribute('visible')) {
+            // Plaats het model op de positie van de reticle
+            modelContainer.setAttribute('position', reticle.getAttribute('position'));
+            modelContainer.setAttribute('scale', '0.05 0.05 0.05'); // Maak het model zichtbaar
+          }
+        });
+      </script>
+
     </a-scene>
   </body>
 </html>
