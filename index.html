@@ -57,12 +57,21 @@
       <!-- AR Marker Definition: This entity becomes visible when the 'hiro' pattern is detected -->
       <a-marker preset='hiro'>
         
-        <!-- GLTF Model Entity -->
+        <!-- 1. **DEBUGGING AID:** A simple, high-visibility green box to confirm the marker is detected and working. -->
+        <a-box 
+          color="lime" 
+          width="0.1" 
+          height="0.1" 
+          depth="0.1" 
+          position="0.5 0.05 0"
+        ></a-box>
+        
+        <!-- 2. GLTF Model Entity -->
         <a-entity
           gltf-model="#ruwe-doos-model" 
           scale="1 1 1" 
-          rotation="-90 0 0" <!-- NEW: Rotated -90 degrees on the X-axis to stand it upright -->
-          position="0 0 0" <!-- Resetting position; we might need to adjust this after rotation test -->
+          rotation="0 0 0"   <!-- Reverted rotation to check for Z-up model pivot -->
+          position="0 0.75 0.01" <!-- Lifted 0.75m up (half of 1.5m) and slightly forward (0.01m) -->
           model-loaded 
         >
         </a-entity>
