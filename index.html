@@ -1,29 +1,80 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Wiebel-AR Ruwe Doos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiebel-AR Ruwe Doos (Augmented Reality)</title>
+    <!-- Load A-Frame core library -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <!-- Load AR.js library for marker-based AR -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+    <!-- Basic styling to ensure the video feed fills the viewport -->
+    <style>
+      body { margin: 0; overflow: hidden; }
+    </style>
+
+    <!-- Custom A-Frame Component for Model Debugging -->
+    <script>
+      AFRAME.registerComponent('model-loaded', {
+        init: function () {
+          const model = this.el;
+          model.addEventListener('model-loaded', () => {
+            console.log('RuweDoos.glb loaded successfully!');
+            // You can optionally add a visual cue here, like changing the color of the marker content
+          });
+          model.addEventListener('model-error', (evt) => {
+            console.error('Error loading RuweDoos.glb:', evt.detail.src);
+            // Fallback: Add a bright red box if the model fails to load
+            const fallbackBox = document.createElement('a-box');
+            fallbackBox.setAttribute('color', 'red');
+            fallbackBox.setAttribute('width', '1');
+            fallbackBox.setAttribute('height', '1');
+            fallbackBox.setAttribute('depth', '1');
+            model.appendChild(fallbackBox);
+          });
+        }
+      });
+    </script>
   </head>
-  
-  <body style='margin : 0px; overflow: hidden;'>
+
+  <body>
     
+    <!-- Setup the A-Frame Scene for AR.js -->
     <a-scene
         embedded
         vr-mode-ui="enabled: false"
-        arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30;"
+        arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30; cameraParametersUrl: camera_para.dat;"
+        background="color: #ECECEC" 
     >
 
+      <!-- 
+        Asset Management: Define assets here for better performance (pre-loading).
+        The 'RuweDoos.glb' file must be hosted and accessible.
+      -->
+      <a-assets>
+        <a-asset-item id="ruwe-doos-model" src="RuweDoos.glb"></a-asset-item>
+      </a-assets>
+
+      <!-- AR Marker Definition: This entity becomes visible when the 'hiro' pattern is detected -->
       <a-marker preset='hiro'>
         
+        <!-- GLTF Model Entity -->
         <a-entity
-          gltf-model="url(RuweDoos.glb)"
-          scale="1 1 1"  rotation="0 0 0"
-          position="0 0 0"
-        ></a-entity>
+          gltf-model="#ruwe-doos-model" 
+          scale="1 1 1" <!-- UPDATED: Sets the model to 1:1 scale (1 A-Frame unit = 1 meter) -->
+          rotation="0 0 0"
+          position="0 0.75 0" <!-- UPDATED: Lifts the model by 0.75m (half of 1.5m height) so the base rests on the marker -->
+          model-loaded <!-- Attach the custom debugging component -->
+        >
+        </a-entity>
         
       </a-marker>
 
+      <!-- Increased light intensity for better illumination -->
+      <a-light type="ambient" color="#FFF" intensity="0.9"></a-light>
+      <a-light type="directional" position="1 2 1" intensity="0.8"></a-light>
+
+      <!-- Camera entity required by AR.js -->
       <a-entity camera></a-entity>
       
     </a-scene>
