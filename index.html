@@ -43,8 +43,9 @@
     <a-scene
         embedded
         vr-mode-ui="enabled: false"
-        arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30; cameraParametersUrl: camera_para.dat;"
-        background="color: #ECECEC" 
+        <!-- REMOVED 'cameraParametersUrl: camera_para.dat;' to simplify initialization -->
+        arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30;"
+        <!-- REMOVED background color - screen will be black if camera fails -->
     >
 
       <!-- 
@@ -61,10 +62,10 @@
         <!-- GLTF Model Entity -->
         <a-entity
           gltf-model="#ruwe-doos-model" 
-          scale="1 1 1" <!-- UPDATED: Sets the model to 1:1 scale (1 A-Frame unit = 1 meter) -->
+          scale="1 1 1" 
           rotation="0 0 0"
-          position="0 0.75 0" <!-- UPDATED: Lifts the model by 0.75m (half of 1.5m height) so the base rests on the marker -->
-          model-loaded <!-- Attach the custom debugging component -->
+          position="0 0.75 0" 
+          model-loaded 
         >
         </a-entity>
         
