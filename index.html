@@ -43,7 +43,8 @@
     <a-scene
         embedded
         vr-mode-ui="enabled: false"
-        arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30;"
+        <!-- UPDATED markerSize to 0.11 (11cm) to match your physical marker -->
+        arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30; markerSize: 0.11;" 
     >
 
       <!-- 
@@ -63,15 +64,15 @@
           width="0.1" 
           height="0.1" 
           depth="0.1" 
-          position="0.5 0.05 0"
+          position="0 0.05 0" 
         ></a-box>
         
         <!-- 2. GLTF Model Entity -->
         <a-entity
           gltf-model="#ruwe-doos-model" 
           scale="1 1 1" 
-          rotation="0 0 0"   <!-- Reverted rotation to check for Z-up model pivot -->
-          position="0 0.75 0.01" <!-- Lifted 0.75m up (half of 1.5m) and slightly forward (0.01m) -->
+          rotation="-90 0 0"   
+          position="0 0.75 0" 
           model-loaded 
         >
         </a-entity>
