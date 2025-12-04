@@ -11,6 +11,18 @@
     <!-- Basic styling to ensure the video feed fills the viewport -->
     <style>
       body { margin: 0; overflow: hidden; }
+      #status-container {
+        position: fixed; 
+        top: 10px; 
+        left: 10px; 
+        z-index: 9999; 
+        padding: 10px; 
+        background: yellow; 
+        color: black; 
+        font-weight: bold; 
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
     </style>
 
     <!-- Custom A-Frame Component for Model Debugging -->
@@ -20,7 +32,6 @@
           const model = this.el;
           model.addEventListener('model-loaded', () => {
             console.log('RuweDoos.glb loaded successfully!');
-            // You can optionally add a visual cue here, like changing the color of the marker content
           });
           model.addEventListener('model-error', (evt) => {
             console.error('Error loading RuweDoos.glb:', evt.detail.src);
@@ -34,17 +45,36 @@
           });
         }
       });
+
+      // NEW: Component to monitor marker visibility and update a visible HTML element
+      AFRAME.registerComponent('marker-status', {
+        init: function () {
+          this.statusText = document.getElementById('status-text');
+          this.el.addEventListener('markerFound', () => {
+              this.statusText.textContent = 'Marker Detected: Model should be visible.';
+              this.statusText.style.backgroundColor = 'lime';
+          });
+          this.el.addEventListener('markerLost', () => {
+              this.statusText.textContent = 'Looking for Marker...';
+              this.statusText.style.backgroundColor = 'yellow';
+          });
+        }
+      });
     </script>
   </head>
 
   <body>
-    
+    <!-- NEW: Visible status indicator -->
+    <div id="status-container">
+      <span id="status-text">Starting AR.js...</span>
+    </div>
+
     <!-- Setup the A-Frame Scene for AR.js -->
     <a-scene
         embedded
         vr-mode-ui="enabled: false"
-        <!-- UPDATED markerSize to 0.11 (11cm) to match your physical marker -->
-        arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30; markerSize: 0.11;" 
+        <!-- REVERTED markerSize to default 0.08m (80mm) for wider compatibility. -->
+        arjs="sourceType: webcam; detectionMode: mono; maxDetectionRate: 30; markerSize: 0.08;" 
     >
 
       <!-- 
@@ -56,18 +86,9 @@
       </a-assets>
 
       <!-- AR Marker Definition: This entity becomes visible when the 'hiro' pattern is detected -->
-      <a-marker preset='hiro'>
+      <a-marker preset='hiro' marker-status> <!-- ADDED marker-status component -->
         
-        <!-- 1. **DEBUGGING AID:** A simple, high-visibility green box to confirm the marker is detected and working. -->
-        <a-box 
-          color="lime" 
-          width="0.1" 
-          height="0.1" 
-          depth="0.1" 
-          position="0 0.05 0" 
-        ></a-box>
-        
-        <!-- 2. GLTF Model Entity -->
+        <!-- GLTF Model Entity -->
         <a-entity
           gltf-model="#ruwe-doos-model" 
           scale="1 1 1" 
